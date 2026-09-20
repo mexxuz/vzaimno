@@ -1,0 +1,191 @@
+/* «Взаимно» — ДВИЖЕНИЕ (основа дизайн-системы).
+   Отклики на действия: вдавливание при нажатии, блик, искры, тряска, появление.
+   Поведение (когда что запускать) — в miniapp/js/motion.js.
+   Длительности короткие: движение подсказывает, что случилось, а не развлекает. */
+
+/* ---------- Содержимое кнопки — поверх блика ---------- */
+.action > svg, .btn > *, .icon-btn > svg, .chip > * { position: relative; z-index: 1; }
+
+/* ---------- Искры и «удар сердца» ---------- */
+.mx-spark {
+  position: fixed; z-index: 100; width: 8px; height: 3px; border-radius: 2px; pointer-events: none;
+  transform: translate(-50%, -50%) rotate(var(--rot));
+  animation: mx-spark 650ms var(--ease-out) forwards;
+}
+@keyframes mx-spark {
+  to { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) rotate(var(--rot)) scaleX(.2); opacity: 0; }
+}
+.mx-beat svg { animation: mx-beat 520ms var(--ease-spring); }
+@keyframes mx-beat { 0% { transform: scale(1); } 30% { transform: scale(1.35); } 60% { transform: scale(.9); } 100% { transform: scale(1); } }
+
+/* ---------- Тряска ---------- */
+.mx-shake { animation: mx-shake 420ms cubic-bezier(.36, .07, .19, .97); }
+@keyframes mx-shake {
+  10%, 90% { transform: translateX(-2px); }
+  20%, 80% { transform: translateX(4px); }
+  30%, 50%, 70% { transform: translateX(-7px); }
+  40%, 60% { transform: translateX(7px); }
+}
+.composer--locked.mx-shake { animation-name: mx-shake-x; }
+@keyframes mx-shake-x {
+  10%, 90% { transform: translate(calc(-50% - 2px)); }
+  20%, 80% { transform: translate(calc(-50% + 4px)); }
+  30%, 50%, 70% { transform: translate(calc(-50% - 7px)); }
+  40%, 60% { transform: translate(calc(-50% + 7px)); }
+}
+
+/* ---------- Текст ---------- */
+.mx-letter { display: inline-block; animation: mx-letter 620ms calc(700ms + var(--i) * 45ms) var(--ease-spring) both; }
+@keyframes mx-letter { from { opacity: 0; transform: translateY(24px) scale(.6) rotate(-8deg); } }
+.mx-word { display: inline-block; animation: mx-word 700ms calc(var(--i) * 80ms) var(--ease-out) both; }
+@keyframes mx-word { from { opacity: 0; filter: blur(10px); transform: translateY(8px); } }
+/* Выделенное градиентом слово: заливку несёт каждая буква/слово, а не всё слово целиком —
+   иначе при движении частей градиент «проступает» прямоугольником */
+em.mx-split { background: none; color: inherit; -webkit-text-fill-color: currentColor; }
+em.mx-split .mx-word, em.mx-split .mx-letter {
+  /* --a и --b — где эта часть стоит в слове (0…1); motion.js считает их сам */
+  background: linear-gradient(100deg,
+    color-mix(in oklab, var(--like) calc(var(--a, 0) * 100%), var(--accent)),
+    color-mix(in oklab, var(--like) calc(var(--b, 1) * 100%), var(--accent)));
+  -webkit-background-clip: text; background-clip: text;
+  color: transparent; -webkit-text-fill-color: transparent;
+}
+.mx-counting { color: var(--like-strong); }
+
+/* ---------- Пульс счётчика ---------- */
+.counter.mx-pulse { animation: mx-pulse 900ms var(--ease-out); }
+@keyframes mx-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(240, 80, 140, .55); transform: scale(1); }
+  30% { transform: scale(1.25); }
+  100% { box-shadow: 0 0 0 12px rgba(240, 80, 140, 0); transform: scale(1); }
+}
+
+/* ---------- Переключатель-«таблетка»: подсветка переезжает ---------- */
+.segmented.mx-seg { position: relative; }
+.segmented.mx-seg button { position: relative; z-index: 1; }
+.segmented.mx-seg button[aria-pressed="true"] { background: transparent; box-shadow: none; }
+.segmented { --seg-pad: 4px; --seg-gap: 4px; }
+.lang-switch { --seg-pad: 3px; --seg-gap: 2px; }
+.mx-seg__ind {
+  position: absolute; z-index: 0; border-radius: var(--r-pill);
+  top: var(--seg-pad); bottom: var(--seg-pad); left: var(--seg-pad);
+  width: calc((100% - 2 * var(--seg-pad) - (var(--n, 2) - 1) * var(--seg-gap)) / var(--n, 2));
+  transform: translateX(calc(var(--i, 0) * (100% + var(--seg-gap))));
+  background: var(--accent-grad); box-shadow: var(--shadow-soft);
+  transition: transform 420ms var(--ease-spring);
+}
+
+/* ---------- Появление экрана по очереди ---------- */
+.mx-enter { animation: mx-enter 520ms calc(var(--i) * 55ms) var(--ease-out) both; }
+@keyframes mx-enter { from { opacity: 0; transform: translateY(14px); } }
+
+/* ---------- Блик на главных кнопках (Glare) ---------- */
+.btn--primary, .btn--like { position: relative; overflow: hidden; isolation: isolate; }
+.btn--primary::after, .btn--like::after {
+  content: ""; position: absolute; inset: -20% auto -20% -60%; width: 45%; z-index: 0; pointer-events: none;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .45), transparent);
+  transform: skewX(-18deg) translateX(0); opacity: 0;
+}
+.btn--primary:active::after, .btn--like:active::after {
+  opacity: 1; animation: mx-glare 700ms var(--ease-out);
+}
+.btn--go::after, .premium .btn--like::after { opacity: 1; animation: mx-glare 2.6s 1.2s var(--ease-out) infinite; }
+@keyframes mx-glare { from { transform: skewX(-18deg) translateX(0); } to { transform: skewX(-18deg) translateX(420%); } }
+
+/* ---------- Стрелка уезжает вправо (Slide Arrow) ---------- */
+.btn__arrow svg { transition: transform var(--dur) var(--ease-out); }
+.btn--go:active .btn__arrow svg { animation: mx-arrow 600ms var(--ease-out); }
+@keyframes mx-arrow { 45% { transform: translateX(22px); opacity: 0; } 46% { transform: translateX(-22px); opacity: 0; } 100% { transform: translateX(0); opacity: 1; } }
+.row__chev { transition: transform var(--dur) var(--ease-out); }
+.row:hover .row__chev { transform: translateX(3px); }
+
+/* ---------- Иконка фильтров поворачивается (Rotate) ---------- */
+.icon-btn--ring svg { transition: transform 500ms var(--ease-spring); }
+.icon-btn--ring:active svg { transform: rotate(90deg); }
+
+/* ---------- Выключатель «сплющивается» (Squish Switch) ---------- */
+.switch__track::after { transition: transform var(--dur) var(--ease-spring), width var(--dur) var(--ease-out); }
+.switch:active .switch__track::after { width: 30px; }
+.switch input:checked:active + .switch__track::after { transform: translateX(13px); }
+
+/* ---------- Точка выбора пружинит (Jelly Radio) ---------- */
+.option[aria-checked="true"] .option__dot { animation: mx-jelly 520ms var(--ease-spring); }
+@keyframes mx-jelly { 0% { transform: scale(.6, .6); } 40% { transform: scale(1.25, .8); } 70% { transform: scale(.9, 1.1); } 100% { transform: scale(1); } }
+
+/* ---------- Галочка «пружиной» (Spring Check) ---------- */
+.verify-art.is-done .verify-art__hand, .bubble--meet.is-ok .bubble--meet__status svg { animation: mx-check 600ms var(--ease-spring); }
+@keyframes mx-check { from { transform: scale(0) rotate(-40deg); } }
+
+/* ---------- Сердце во время «Взаимно» бьётся ---------- */
+.match__heart svg { animation: mx-heartbeat 1.6s 1.3s ease-in-out infinite; }
+@keyframes mx-heartbeat { 0%, 60%, 100% { transform: scale(1); } 15% { transform: scale(1.18); } 30% { transform: scale(.96); } 45% { transform: scale(1.1); } }
+
+/* ---------- Переливающаяся рамка Plus (Star Border) ---------- */
+@property --mx-angle { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
+.promo--plus { position: relative; }
+.promo--plus::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1.5px; pointer-events: none;
+  background: conic-gradient(from var(--mx-angle), transparent 0 60%, #c4a2f5 70%, #f0508c 80%, transparent 90%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  animation: mx-spin 4s linear infinite;
+}
+@keyframes mx-spin { to { --mx-angle: 360deg; } }
+
+/* ---------- Удержание кнопки удаления (Hold Button) ---------- */
+[data-hold] { position: relative; overflow: hidden; isolation: isolate; user-select: none; -webkit-user-select: none; touch-action: none; }
+[data-hold]::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; background: var(--danger); opacity: .22;
+  transform: scaleX(0); transform-origin: left;
+}
+[data-hold].mx-holding::before { transform: scaleX(1); transition: transform var(--hold, 1400ms) linear; }
+[data-hold].mx-holding { transform: scale(.98); }
+
+/* ---------- Карточка в ленте — лёгкий «вдох» при появлении ---------- */
+#top-card { animation: mx-card-in 420ms var(--ease-spring); }
+/* новая верхняя карточка «поднимается» из стопки — с того места, где лежала */
+@keyframes mx-card-in { from { filter: brightness(.85); } }
+
+/* ---------- Плавность и наведение: одинаково для всех кнопок ----------
+   Одно правило на всё нажимаемое:
+   • изменения цвета, фона, тени — плавно, 220 мс;
+   • наведение мышью — кнопка приподнимается на 2 px и чуть светлеет;
+   • нажатие — возвращается на место и слегка вдавливается (97%).
+   Наведение только там, где есть мышь: на телефоне «залипшее» наведение
+   после касания выглядело бы как ошибка.
+   Строки списков, переключатель-таблетка и пункты нижнего меню не подпрыгивают —
+   они часть общего блока; у них при наведении меняется только цвет. */
+.btn, .action, .icon-btn, .chip, .option, .plan, .pair, .photo-slot, .like-tile, .gender-pick__opt, .card__more,
+.segmented button, .tabbar a, .row, .date-field, .inbox-card__main, .input, .textarea, .select {
+  transition:
+    transform var(--dur) var(--ease-out),
+    background-color var(--dur) var(--ease-out),
+    color var(--dur) var(--ease-out),
+    border-color var(--dur) var(--ease-out),
+    box-shadow var(--dur) var(--ease-out),
+    filter var(--dur) var(--ease-out),
+    opacity var(--dur) var(--ease-out);
+}
+
+.btn:active, .action:active, .icon-btn:active, .chip:active, .option:active, .plan:active, .pair:active,
+.photo-slot:active, .like-tile:active, .gender-pick__opt:active, .card__more:active { transform: scale(.97); }
+
+@media (hover: hover) {
+  :is(.btn, .action, .icon-btn, .chip, .option, .plan, .pair, .photo-slot, .like-tile, .gender-pick__opt, .card__more):hover:not([disabled]) {
+    transform: translateY(-2px); filter: brightness(1.06);
+  }
+  :is(.btn, .action, .icon-btn, .chip, .option, .plan, .pair, .photo-slot, .like-tile, .gender-pick__opt, .card__more):active {
+    transform: scale(.97);
+  }
+  .btn--secondary:hover, .btn--ghost:hover, .icon-btn:hover { background: var(--accent-soft); }
+
+  .segmented button[aria-pressed="false"]:hover, .tabbar a:not([aria-current]):hover { color: var(--text); }
+  .row:hover { background: var(--surface-2); }
+  .inbox-card__main:hover { opacity: .85; }
+  .input:hover:not(:focus), .textarea:hover:not(:focus), .date-field:hover { border-color: var(--violet-300); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 1ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important; }
+  .mx-spark { display: none; }
+}

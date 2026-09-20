@@ -1,0 +1,326 @@
+/* ==========================================================================
+   «Взаимно» — АТОМЫ
+   Неделимые элементы интерфейса. Зависят только от tokens.css.
+   Текст · кнопки · круглые кнопки · метки · значки · счётчики · поля ввода ·
+   выключатель · фото и аватар · знак-линза · полоса прогресса.
+   ========================================================================== */
+
+/* ==========================================================================
+   «Взаимно» — компоненты
+   Зависят только от tokens.css. Один файл на мини-приложение и витрину.
+   ========================================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { margin: 0; }
+
+body {
+  background: var(--bg-glow), var(--bg);
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, p { margin: 0; }
+
+img { display: block; max-width: 100%; }
+
+button { font: inherit; color: inherit; }
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* ---------- Типографика ---------- */
+.t-hero {
+  font-family: var(--font-display);
+  font-size: var(--fs-hero);
+  font-weight: var(--fw-black);
+  line-height: var(--lh-tight);
+  letter-spacing: -0.02em;
+}
+
+.t-d1 {
+  font-family: var(--font-display);
+  font-size: var(--fs-d1);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-tight);
+  letter-spacing: -0.015em;
+}
+
+.t-d2 {
+  font-family: var(--font-display);
+  font-size: var(--fs-d2);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-tight);
+  letter-spacing: -0.01em;
+}
+
+/* Выделение внутри заголовка: «Знакомства, где <em>всё взаимно</em>» */
+.t-hero em, .t-d1 em, .t-d2 em, .display em {
+  font-style: normal; font-weight: var(--fw-black);
+  background: var(--brand-grad); -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+
+.display-light { font-weight: 400; }
+
+.t-h { font-size: var(--fs-h); font-weight: var(--fw-semibold); line-height: var(--lh-snug); }
+
+.t-body { font-size: var(--fs-body); }
+
+.t-sm { font-size: var(--fs-sm); line-height: 1.45; }
+
+.t-xs { font-size: var(--fs-xs); line-height: 1.4; }
+
+.t-muted { color: var(--text-muted); }
+
+.t-label {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ---------- Кнопки ---------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--sp-2);
+  min-height: 52px; padding: 0 var(--sp-6);
+  border: 0; border-radius: var(--r-pill);
+  font-size: var(--fs-body); font-weight: var(--fw-semibold);
+  cursor: pointer; text-decoration: none;
+  transition: transform var(--dur-fast) var(--ease-out), background var(--dur) var(--ease-out);
+}
+
+.btn[disabled] { opacity: .45; pointer-events: none; }
+
+.btn--block { width: 100%; }
+
+.btn--primary { background: var(--accent-grad); color: var(--on-accent); box-shadow: var(--shadow-float); }
+
+.btn--like { background: var(--like-grad); color: var(--white); box-shadow: 0 10px 24px -10px rgba(217, 58, 118, .55); }
+
+.btn--secondary { background: var(--surface-2); color: var(--accent); }
+
+.btn--ghost { background: transparent; color: var(--accent); padding: 0 var(--sp-3); min-height: var(--tap); }
+
+.btn--danger { background: var(--danger-soft); color: var(--danger); }
+
+.btn--sm { min-height: 36px; padding: 0 var(--sp-4); font-size: var(--fs-sm); }
+
+/* иконка в кнопке — по размеру текста, а не во всю кнопку */
+.btn svg { width: 20px; height: 20px; flex: none; }
+
+.btn--sm svg { width: 16px; height: 16px; }
+
+/* Круглые кнопки действий под карточкой */
+.action {
+  width: 60px; height: 60px; border-radius: 50%; flex: none; padding: 0; aspect-ratio: 1;
+  display: grid; place-items: center;
+  border: 4px solid var(--bg); cursor: pointer;
+  background: var(--surface); color: var(--accent);
+  box-shadow: var(--shadow-float);
+  transition: transform var(--dur-fast) var(--ease-spring);
+}
+
+.action svg { width: 28px; height: 28px; }
+
+.action--sm { width: 48px; height: 48px; }
+
+.action--sm svg { width: 22px; height: 22px; }
+
+.action--pass { color: var(--text-muted); }
+
+.action--like { width: 76px; height: 76px; background: var(--like-grad); color: var(--white); box-shadow: 0 12px 28px -10px rgba(217, 58, 118, .6); }
+
+.action--like svg { width: 32px; height: 32px; }
+
+.action--super { color: var(--like); }
+
+.icon-btn {
+  width: var(--tap); height: var(--tap); border-radius: 50%; flex: none; padding: 0;
+  display: grid; place-items: center; border: 0; cursor: pointer;
+  background: transparent; color: var(--text);
+}
+
+.icon-btn svg { width: 24px; height: 24px; }
+
+/* ---------- Метки и значки ---------- */
+.chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  min-height: 36px; padding: 0 14px;
+  border-radius: var(--r-pill);
+  border: 1.5px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: var(--fs-sm); font-weight: var(--fw-medium);
+  cursor: pointer; user-select: none;
+}
+
+.chip[aria-pressed="true"] { background: var(--accent-grad); border-color: transparent; color: var(--on-accent); }
+
+.chip--static { cursor: default; }
+
+.chip--shared { border-color: var(--like); background: var(--like-soft); }
+
+.chips { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  height: 24px; padding: 0 8px; border-radius: var(--r-pill);
+  font-size: var(--fs-xs); font-weight: var(--fw-semibold);
+  white-space: nowrap;
+}
+
+.badge svg { width: 14px; height: 14px; }
+
+.badge--verified { background: var(--safe-soft); color: var(--safe); }
+
+.badge--accent { background: var(--accent-soft); color: var(--accent); }
+
+.badge--like { background: var(--like-grad); color: var(--white); }
+
+.badge--glass { background: rgba(21, 14, 36, .45); color: #fff; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+
+.counter {
+  min-width: 20px; height: 20px; padding: 0 6px; border-radius: var(--r-pill);
+  display: inline-grid; place-items: center;
+  background: var(--like-grad); color: var(--white);
+  font-size: 11px; font-weight: var(--fw-bold);
+}
+
+.input, .textarea, .select {
+  width: 100%; min-height: 52px; padding: 14px 18px;
+  border: 1.5px solid var(--border); border-radius: var(--r-md);
+  background: var(--surface); color: var(--text);
+  font: inherit; font-size: var(--fs-body);
+}
+
+.textarea { min-height: 112px; resize: vertical; }
+
+.input:focus, .textarea:focus, .select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+
+/* Переключатель */
+.switch { position: relative; width: 52px; height: 32px; flex: none; }
+
+.switch input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; z-index: 1; }
+
+.switch__track {
+  position: absolute; inset: 0; border-radius: var(--r-pill);
+  background: var(--surface-2); border: 1.5px solid var(--border);
+  transition: background var(--dur) var(--ease-out);
+}
+
+.switch__track::after {
+  content: ""; position: absolute; top: 3px; left: 3px;
+  width: 23px; height: 23px; border-radius: 50%;
+  background: var(--white); box-shadow: 0 1px 3px rgba(0,0,0,.25);
+  transition: transform var(--dur) var(--ease-spring);
+}
+
+.switch input:checked + .switch__track { background: var(--accent-grad); border-color: transparent; }
+
+.switch input:checked + .switch__track::after { transform: translateX(20px); }
+
+.switch input:focus-visible + .switch__track { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+/* Ползунок диапазона */
+.range { width: 100%; accent-color: var(--accent); height: 32px; }
+
+/* ---------- Аватар и «фото»-заглушка ----------
+   В прототипе нет настоящих фотографий людей: вместо них — цветные
+   портреты-заглушки. Цвета задаются --p1/--p2 на элементе. */
+.photo {
+  position: relative; overflow: hidden;
+  background:
+    radial-gradient(ellipse 38% 30% at 50% 38%, rgba(255,255,255,.28), transparent 70%),
+    radial-gradient(ellipse 70% 48% at 50% 100%, rgba(255,255,255,.18), transparent 70%),
+    linear-gradient(160deg, var(--p1, #8b45e8), var(--p2, #f0508c));
+}
+
+.photo::after {           /* силуэт */
+  content: ""; position: absolute; left: 50%; bottom: -6%;
+  width: 64%; aspect-ratio: 1 / 1.15; transform: translateX(-50%);
+  background:
+    radial-gradient(circle at 50% 28%, rgba(255,255,255,.22) 0 21%, transparent 21.5%),
+    radial-gradient(ellipse 50% 40% at 50% 92%, rgba(255,255,255,.22) 0 98%, transparent 100%);
+}
+
+.photo--blur { filter: blur(14px) saturate(.8); transform: scale(1.15); }
+
+.avatar {
+  width: 56px; height: 56px; border-radius: 50%; flex: none;
+  overflow: hidden; position: relative;
+}
+
+.avatar .photo { position: absolute; inset: 0; }
+
+.avatar--sm { width: 40px; height: 40px; }
+
+.avatar--lg { width: 96px; height: 96px; }
+
+.avatar__online {
+  position: absolute; right: 2px; bottom: 2px; width: 12px; height: 12px;
+  border-radius: 50%; background: var(--mint-400); border: 2px solid var(--surface);
+}
+
+/* ---------- Знак «Взаимно»: линза двух кругов ----------
+   Пересечение двух кругов — область взаимности. Это главный мотив бренда:
+   логотип, маска фото на экране совпадения, отметка «взаимно» в списках. */
+.lens-mark { display: inline-block; width: 32px; height: 22px; flex: none; overflow: visible; }
+
+/* две линии сердца: фиолетовая и розовая, внизу перекрещиваются */
+.lens-mark .h-l, .lens-mark .h-r {
+  fill: none; stroke-width: 4.6; stroke-linecap: round;
+  transform-box: view-box; transform-origin: 32px 40px;
+}
+.lens-mark .h-l { stroke: var(--accent); }
+.lens-mark .h-r { stroke: var(--like); }
+
+
+.logo { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: var(--fw-bold); font-size: 20px; letter-spacing: -0.02em; }
+
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--mint-400); display: inline-block; }
+
+.inline-v { display: inline-flex; color: var(--safe); vertical-align: -3px; }
+
+.inline-v svg { width: 16px; height: 16px; }
+
+.progress { height: 6px; border-radius: 3px; background: var(--surface-2); overflow: hidden; }
+
+.progress span { display: block; height: 100%; border-radius: 3px; background: var(--like); transition: width var(--dur-slow) var(--ease-out); }
+
+.warn-dot { color: var(--warn); display: inline-flex; vertical-align: -3px; margin-right: 4px; }
+
+.warn-dot svg { width: 16px; height: 16px; }
+
+@media (min-width: 520px) {
+  body { background: color-mix(in srgb, var(--bg) 70%, var(--surface-2)); }
+  #app { background: var(--bg-glow), var(--bg); box-shadow: 0 0 0 1px var(--border); }
+}
+
+/* ---------- Настоящие фото (рабочий режим) ---------- */
+.photo.photo--img { background-size: cover; background-position: center; background-color: var(--surface-2); }
+
+.photo.photo--img::after { display: none; }
+
+.btn--go { justify-content: space-between; min-height: 62px; padding: 0 9px 0 26px; }
+
+.btn__arrow { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; background: rgba(255, 255, 255, .22); }
+
+.btn__arrow svg { width: 22px; height: 22px; }
+
+.icon-btn--ring { width: 50px; height: 50px; border: 1.5px solid var(--accent); color: var(--accent); flex: none; }
+
+.progress span { background: var(--accent-grad); }

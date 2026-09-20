@@ -1,0 +1,181 @@
+/* ==========================================================================
+   «Взаимно» — дизайн-токены (версия 2: «Сирень»)
+   Светлая сиреневая основа, фиолетовый «аметист» для действий,
+   розовый «пион» — только для симпатии и совпадений.
+   Три слоя: примитивы → смысловые (роль в интерфейсе) → компоненты.
+   Основная тема — светлая. Тёмная включается атрибутом data-theme="dark"
+   на <html>: приложение ставит его, когда в анкете выбран пол «Мужчина».
+   Системная тема телефона и Telegram на выбор не влияют.
+   ========================================================================== */
+
+:root {
+  /* ---------- Примитивы ---------- */
+  /* Ночь — текст и тёмная тема */
+  --plum-950: #140d22;
+  --plum-900: #22133a;
+  --plum-800: #2d1f47;
+  --plum-700: #3e2d5e;
+  --plum-500: #7a6c92;
+  --plum-300: #b9acd2;
+  --plum-100: #ece4f8;
+  --plum-50:  #f7f3fd;   /* сирень — фон */
+  --white:    #ffffff;
+
+  /* Аметист — действие */
+  --violet-700: #5b1fb8;
+  --violet-600: #6d28d9;
+  --violet-500: #8b45e8;
+  --violet-300: #c4a2f5;
+  --violet-100: #efe5fc;
+
+  /* Пион — симпатия */
+  --peony-600: #d93a76;
+  --peony-500: #f0508c;
+  --peony-300: #f9a3c3;
+  --peony-100: #fde6ef;
+  /* старые имена остаются, чтобы ничего не сломать */
+  --apricot-600: var(--peony-600);
+  --apricot-500: var(--peony-500);
+  --apricot-100: var(--peony-100);
+
+  --mint-600: #1b8a55;
+  --mint-400: #3ecf8e;
+  --mint-100: #dcf4e8;
+
+  --rose-600: #cf3140;
+  --rose-400: #ff6b78;
+  --rose-100: #fde4e6;
+
+  --amber-700: #9a6310;
+  --amber-400: #f5b83d;
+  --amber-100: #fdf1d6;
+
+  /* ---------- Типографика ---------- */
+  --font-display: "Montserrat", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Onest", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+  --fs-hero: 44px;
+  --fs-d1: 28px;
+  --fs-d2: 22px;
+  --fs-h: 18px;
+  --fs-body: 16px;
+  --fs-sm: 14px;
+  --fs-xs: 12px;
+
+  --lh-tight: 1.12;
+  --lh-snug: 1.3;
+  --lh-body: 1.5;
+
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+  --fw-black: 800;
+
+  /* ---------- Отступы (шаг 4px) ---------- */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-10: 40px;
+  --gutter: 16px;
+
+  /* ---------- Скругления ---------- */
+  --r-sm: 12px;
+  --r-md: 18px;
+  --r-lg: 26px;
+  --r-card: 34px;
+  --r-pill: 999px;
+
+  /* ---------- Движение ---------- */
+  --ease-out: cubic-bezier(.2, .8, .2, 1);
+  --ease-spring: cubic-bezier(.34, 1.56, .64, 1);
+  --dur-fast: 120ms;
+  --dur: 220ms;
+  --dur-slow: 420ms;
+
+  /* ---------- Размеры ---------- */
+  --tap: 44px;
+  --nav-h: 76px;        /* плавающее меню + отступ снизу */
+  --app-max: 480px;
+
+  /* ---------- Смысловые: светлая тема ---------- */
+  --bg: var(--plum-50);
+  --bg-glow: none;       /* свечение поверх фона — только в тёмной теме */
+  --surface: var(--white);
+  --surface-2: #f1e9fb;
+  --surface-inverse: var(--plum-900);
+  --text: var(--plum-900);
+  --text-muted: var(--plum-500);
+  --text-inverse: var(--white);
+  --border: #e9dff6;
+  --focus: var(--violet-500);
+
+  --accent: var(--violet-500);
+  --accent-hover: var(--violet-600);
+  --accent-soft: var(--violet-100);
+  --accent-grad: linear-gradient(135deg, #a064f2 0%, #7a2fe0 55%, #6d28d9 100%);
+  --on-accent: var(--white);
+  /* фирменный переход: фиолетовый действия → розовый симпатии; для выделенных слов в заголовках */
+  --brand-grad: linear-gradient(100deg, var(--accent) 0%, var(--accent) 35%, var(--like) 100%);
+
+  --like: var(--peony-500);
+  --like-strong: var(--peony-600);
+  --like-soft: var(--peony-100);
+  --like-grad: linear-gradient(135deg, #ff7aa8 0%, #f0508c 60%, #d93a76 100%);
+
+  --safe: var(--mint-600);
+  --safe-soft: var(--mint-100);
+  --danger: var(--rose-600);
+  --danger-soft: var(--rose-100);
+  --warn: var(--amber-700);
+  --warn-soft: var(--amber-100);
+
+  --shadow-card: 0 2px 6px rgba(91, 31, 184, .06), 0 22px 44px -18px rgba(91, 31, 184, .32);
+  --shadow-float: 0 10px 28px -10px rgba(91, 31, 184, .38);
+  --shadow-soft: 0 6px 20px -10px rgba(91, 31, 184, .22);
+  --scrim: rgba(34, 19, 58, .5);
+
+  color-scheme: light;
+}
+
+/* ---------- Тёмная тема «Ночной Ташкент» ----------
+   Включается для мужчин (приложение ставит data-theme="dark" по полу).
+   Основа — почти чёрный с холодным фиолетовым отливом; слои отделяются
+   не заливкой, а светом: полупрозрачные поверхности, тонкая светлая кромка,
+   мягкое свечение фона сверху. Цветные плашки — прозрачные оттенки,
+   а не мутные сплошные заливки. */
+:root[data-theme="dark"] {
+  --bg: #0d0b14;
+  --bg-glow: radial-gradient(120% 60% at 15% -10%, rgba(139, 69, 232, .28), transparent 60%),
+             radial-gradient(90% 50% at 110% 110%, rgba(240, 80, 140, .12), transparent 60%);
+  --surface: #17141f;
+  --surface-2: #221e2d;
+  --surface-inverse: #f3f0fa;
+  --text: #f3f0fa;
+  --text-muted: #9a93ad;
+  --text-inverse: #0d0b14;
+  --border: rgba(255, 255, 255, .08);
+  --focus: #b48cff;
+  --accent: #a57cff;
+  --accent-hover: #c0a3ff;
+  --accent-soft: rgba(165, 124, 255, .16);
+  --accent-grad: linear-gradient(135deg, #b084ff 0%, #8750f0 55%, #6d34e0 100%);
+  --like: #ff5c95;
+  --like-strong: #ff5c95;
+  --like-soft: rgba(255, 92, 149, .15);
+  --safe: #4fd89a;
+  --safe-soft: rgba(79, 216, 154, .12);
+  --danger: #ff6b78;
+  --danger-soft: rgba(255, 107, 120, .13);
+  --warn: #f5b83d;
+  --warn-soft: rgba(245, 184, 61, .13);
+  --shadow-card: 0 1px 0 rgba(255, 255, 255, .05) inset, 0 24px 48px -20px rgba(0, 0, 0, .9);
+  --shadow-float: 0 12px 32px -10px rgba(0, 0, 0, .85), 0 0 0 1px rgba(255, 255, 255, .06);
+  --shadow-soft: 0 8px 24px -12px rgba(0, 0, 0, .8), 0 0 0 1px rgba(255, 255, 255, .05);
+  --scrim: rgba(5, 4, 9, .74);
+  color-scheme: dark;
+}
