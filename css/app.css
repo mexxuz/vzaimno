@@ -1,0 +1,74 @@
+/* ==========================================================================
+   «Взаимно» — ШАБЛОНЫ ЭКРАНОВ
+   Только раскладка: как организмы стоят на каждом экране мини-приложения.
+   Сами элементы — в дизайн-системе: design-system/atoms.css, molecules.css,
+   organisms.css.
+   ========================================================================== */
+
+/* Раскладка экранов мини-приложения. Компоненты — в design-system/components.css */
+#app { max-width: var(--app-max); margin: 0 auto; min-height: 100dvh; position: relative; }
+
+#app.has-tabbar { padding-bottom: calc(var(--nav-h) + env(safe-area-inset-bottom)); }
+
+.screen { padding: var(--sp-2) var(--gutter) var(--sp-6); }
+
+.stack { display: grid; gap: var(--sp-5); align-content: start; }
+
+.stack-sm { display: grid; gap: var(--sp-3); }
+
+.group__label { margin: 0 0 var(--sp-2) var(--sp-1); }
+
+a { color: var(--accent); }
+
+/* ---------- Приветствие ---------- */
+.welcome { display: grid; gap: var(--sp-5); padding-top: var(--sp-5); min-height: 100dvh; align-content: start; }
+
+.welcome__art { display: grid; place-items: center; padding: var(--sp-4) 0 0; }
+
+.welcome__lead { font-size: var(--fs-body); }
+
+/* ---------- Создание анкеты ---------- */
+.setup { display: flex; flex-direction: column; min-height: 100dvh; padding-top: 0; }
+
+.setup__head { display: flex; align-items: center; gap: var(--sp-2); padding: var(--sp-2) 0; margin-left: calc(-1 * var(--sp-3)); }
+
+.setup__head .progress { flex: 1; }
+
+.setup__body { display: grid; gap: var(--sp-5); padding-top: var(--sp-4); align-content: start; flex: 1; }
+
+.setup__foot { position: sticky; bottom: 0; padding: var(--sp-4) 0 calc(var(--sp-4) + env(safe-area-inset-bottom)); background: linear-gradient(to top, var(--bg) 70%, transparent); }
+
+/* ---------- Лента ---------- */
+.feed { display: flex; flex-direction: column; gap: var(--sp-4); padding-bottom: var(--sp-4); }
+
+/* ---------- Анкета целиком ---------- */
+.pv { display: grid; gap: var(--sp-4); }
+
+.pv--actions { padding-bottom: 120px; }
+
+.chat { display: flex; flex-direction: column; gap: var(--sp-2); padding-bottom: 96px; min-height: calc(100dvh - 56px); }
+
+/* ---------- Проверка ---------- */
+.verify { text-align: center; justify-items: center; padding-top: var(--sp-6); }
+
+.verify .notice { text-align: left; }
+
+/* ---------- Язык ---------- */
+.welcome__top { display: flex; justify-content: space-between; align-items: center; gap: var(--sp-3); flex-wrap: wrap; }
+
+.lang-row { cursor: default; }
+
+/* ==========================================================================
+   Версия 2 «Сирень»: светлая основа, плавающее меню, фото с наклоном
+   ========================================================================== */
+/* ---------- Первый экран: косые ленты ---------- */
+.welcome { gap: var(--sp-4); }
+
+.welcome .t-d1 { font-size: 32px; font-weight: 400; }
+
+.feed { gap: var(--sp-3); }
+
+.me-body { padding-top: var(--sp-4); }
+
+/* Колонки экранов не растягиваются под длинный текст без переносов */
+.stack > *, .stack-sm > * { min-width: 0; }
