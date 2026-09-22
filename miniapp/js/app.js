@@ -9,9 +9,8 @@
   const app = document.getElementById("app");
   // Рабочий режим — внутри Telegram (или ?dev=1 на этом компьютере). ?demo — всегда демо-данные
   const qs = new URLSearchParams(location.search);
-  // На витрине (GitHub Pages) сервера нет — там всегда демо-режим
-  const SHOWCASE = /github\.io$/.test(location.hostname);
-  const LIVE = !qs.has("demo") && !SHOWCASE && window.API && API.hasAuth();
+  // Открыто не из Telegram (например, витрина в браузере) — демо-режим
+  const LIVE = !qs.has("demo") && window.API && API.hasAuth();
 
   /* ---------------- Состояние ---------------- */
   const clone = (x) => JSON.parse(JSON.stringify(x));
@@ -66,7 +65,8 @@
   const go = (h) => { location.hash = h; };
   const pal = (i) => D.palettes[i % D.palettes.length];
   const photo = (i, cls = "") => {
-    if (typeof i === "string") return `<div class="photo photo--img ${cls}" style="background-image:url('${i}')"></div>`;
+    // Фото с сервера приходят относительными ссылками — дописываем адрес сервера
+    if (typeof i === "string") return `<div class="photo photo--img ${cls}" style="background-image:url('${window.API ? API.url(i) : i}')"></div>`;
     const [a, b] = pal(i || 0); return `<div class="photo ${cls}" style="--p1:${a};--p2:${b}"></div>`; };
   const avatar = (p, cls = "", online = false) =>
     `<div class="avatar ${cls}">${photo(p.photos[0])}${online ? '<span class="avatar__online"></span>' : ""}</div>`;

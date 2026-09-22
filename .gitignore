@@ -1,0 +1,9 @@
+# На GitHub (страница mexxuz.github.io/vzaimno) уезжает только само приложение
+# и дизайн-система. Сервер, база, фото, настройки, документы и журналы остаются
+# на этом компьютере. server.json — адрес сервера, его пишет server/run.py.
+/*
+!/.gitignore
+!/index.html
+!/server.json
+!/miniapp/
+!/design-system/

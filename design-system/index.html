@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="ru" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Взаимно — дизайн-система</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Onest:wght@400;500;600;700&display=swap&subset=cyrillic" rel="stylesheet">
+  <link rel="stylesheet" href="tokens.css">
+  <link rel="stylesheet" href="atoms.css">
+  <link rel="stylesheet" href="molecules.css">
+  <link rel="stylesheet" href="organisms.css">
+  <link rel="stylesheet" href="motion.css">
+  <style>
+    /* Раскладка самой витрины — не часть дизайн-системы */
+    .ds { display: grid; grid-template-columns: 250px minmax(0, 1fr); min-height: 100dvh; }
+    .ds-nav { position: sticky; top: 0; height: 100dvh; overflow-y: auto; padding: 24px 18px; background: var(--surface); box-shadow: 1px 0 0 var(--border); display: flex; flex-direction: column; gap: 18px; }
+    .ds-nav h2 { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted); margin: 4px 0 6px 10px; }
+    .ds-nav a { display: flex; justify-content: space-between; padding: 7px 10px; border-radius: 12px; color: var(--text); text-decoration: none; font-size: 14px; font-weight: 500; }
+    .ds-nav a:hover { background: var(--surface-2); }
+    .ds-main { padding: 40px 48px 120px; max-width: 1120px; width: 100%; }
+    .ds-top { display: flex; justify-content: flex-end; margin-bottom: 24px; }
+    .ds-top .segmented { width: 240px; }
+    .ds-hero { display: grid; gap: 16px; margin-bottom: 24px; }
+    .ds-hero h1 { font-family: var(--font-display); font-size: 44px; font-weight: 400; line-height: 1.08; letter-spacing: -.02em; margin: 0; }
+    .ds-hero h1 em { font-style: normal; font-weight: 800; background: var(--accent-grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .ds-hero p { max-width: 640px; color: var(--text-muted); margin: 0; }
+    .ds-flow { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; margin-top: 8px; }
+    .ds-flow > a { position: relative; display: grid; gap: 4px; align-content: start; padding: 16px; border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--shadow-soft); color: var(--text); text-decoration: none; }
+    .ds-flow b { font-family: var(--font-display); font-size: 15px; }
+    .ds-flow span { font-size: 13px; color: var(--text-muted); }
+    .ds-flow code { font-size: 11px; color: var(--accent); }
+    .ds-flow > a:not(:last-child)::after { content: "→"; position: absolute; right: -7px; top: 50%; transform: translate(50%, -50%); color: var(--accent); font-weight: 800; }
+    .ds-layer { margin-top: 64px; scroll-margin-top: 24px; }
+    .ds-layer__head h2 { font-family: var(--font-display); font-size: 32px; font-weight: 800; margin: 0 0 6px; }
+    .ds-layer__head h2 em { font-style: normal; background: var(--accent-grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .ds-layer__lead { color: var(--text-muted); max-width: 680px; margin: 0 0 20px; }
+    .ds-item { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 28px; padding: 26px 0; border-top: 1px solid var(--border); scroll-margin-top: 24px; }
+    .ds-item__about h3 { font-family: var(--font-display); font-size: 18px; font-weight: 700; margin: 0 0 6px; }
+    .ds-item__about p { font-size: 14px; color: var(--text-muted); margin: 0; }
+    .ds-item__about code { display: inline-block; margin-top: 10px; font-size: 12px; padding: 3px 8px; border-radius: 8px; background: var(--accent-soft); color: var(--accent); }
+    .ds-stage { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; padding: 24px; border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--shadow-soft); min-width: 0; }
+    .ds-stage--bg { background: var(--bg); box-shadow: inset 0 0 0 1px var(--border); }
+    .ds-stage--col { flex-direction: column; align-items: stretch; }
+    .ds-stage--photo { background: linear-gradient(160deg, #6a4cf5, #f0508c); }
+    .ds-phone { width: 360px; max-width: 100%; margin: 0 auto; }
+    .swatch { width: 132px; border-radius: 16px; overflow: hidden; background: var(--surface); box-shadow: var(--shadow-soft); }
+    .swatch i { display: block; height: 64px; }
+    .swatch div { padding: 8px 10px; font-size: 12px; }
+    .swatch code { display: block; color: var(--text-muted); }
+    .type-row { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 16px; align-items: baseline; padding: 6px 0; }
+    .type-row > span:first-child { font-size: 12px; color: var(--text-muted); }
+    .space { display: grid; justify-items: center; gap: 6px; font-size: 11px; color: var(--text-muted); }
+    .space i { display: block; background: var(--accent-grad); border-radius: 3px; }
+    .radius { width: 84px; height: 64px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); font-size: 12px; font-weight: 600; }
+    .shadow { width: 120px; height: 72px; display: grid; place-items: center; border-radius: 18px; background: var(--surface); font-size: 12px; }
+    /* организмы, которые в приложении прибиты к краю экрана, здесь стоят на месте */
+    .ds-static .tabbar, .ds-static .composer { position: relative; inset: auto; transform: none; width: 100%; max-width: 100%; margin: 0; }
+    .ds-static .sheet { position: relative; inset: auto; transform: none; width: 100%; max-width: 100%; max-height: none; animation: none; }
+    .ds-static .match { position: relative; inset: auto; min-height: 640px; border-radius: var(--r-lg); animation: none; z-index: 0; }
+    .ds-deck.deck { position: relative; height: 560px; max-height: none; min-height: 0; margin: 0 0 36px; }
+    .ds-templates { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+    .ds-templates a { display: grid; gap: 4px; padding: 16px; border-radius: var(--r-lg); background: var(--surface); box-shadow: var(--shadow-soft); color: var(--text); text-decoration: none; }
+    .ds-templates a:hover { box-shadow: 0 0 0 2px var(--accent), var(--shadow-soft); }
+    .ds-templates b { font-family: var(--font-display); }
+    .ds-templates span { font-size: 13px; color: var(--text-muted); }
+    @media (max-width: 900px) {
+      .ds { grid-template-columns: minmax(0, 1fr); }
+      .ds-nav { position: static; height: auto; }
+      .ds-main { padding: 24px 16px 80px; }
+      .ds-item { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+      .ds-flow { grid-template-columns: minmax(0, 1fr); }
+      .ds-flow > a:not(:last-child)::after { content: "↓"; right: 50%; top: auto; bottom: -7px; transform: translate(50%, 50%); }
+      .ds-hero h1 { font-size: 34px; }
+      .ds-top .segmented { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+<div class="ds">
+  <aside class="ds-nav" aria-label="Разделы дизайн-системы">
+    <div class="logo"><svg class="lens-mark" width="32" height="22" viewBox="0 0 64 44" aria-hidden="true"><path class="h-l" pathLength="1" d="M32 12C30 7.5 26.5 5 22.5 5C16.5 5 12.5 10 13.5 17C15 26.5 25.5 33.5 36 41"/><path class="h-r" pathLength="1" d="M32 12C34 7.5 37.5 5 41.5 5C47.5 5 51.5 10 50.5 17C49 26.5 38.5 33.5 28 41"/></svg>Взаимно</div>
+    <nav id="toc"></nav>
+  </aside>
+
+  <main class="ds-main">
+    <div class="ds-top">
+      <div class="segmented" id="theme" role="group" aria-label="Тема">
+        <button data-t="light" aria-pressed="true">Светлая</button><button data-t="dark" aria-pressed="false">Тёмная</button>
+      </div>
+    </div>
+
+    <header class="ds-hero">
+      <span class="t-label">Дизайн-система · «Сирень»</span>
+      <h1>Из чего собрано <em>«Взаимно»</em></h1>
+      <p>Интерфейс собран снизу вверх: из неделимых атомов складываются молекулы, из молекул — организмы, из организмов — экраны. Поменяли атом — он поменялся везде. Каждый слой лежит в своём файле и опирается только на слои ниже.</p>
+      <p>Основная тема — светлая. Тёмная «Ночной Ташкент» включается сама, когда в анкете выбран пол «Мужчина». Переключатель справа вверху показывает обе.</p>
+      <div class="ds-flow">
+        <a href="#base"><b>Основа</b><span>Цвета, шрифты, отступы, скругления, тени, движение</span><code>tokens.css · motion.css</code></a>
+        <a href="#atoms"><b>Атомы</b><span>Кнопка, метка, значок, поле, выключатель, фото</span><code>atoms.css</code></a>
+        <a href="#molecules"><b>Молекулы</b><span>Поле с подписью, выбор пола, строка настройки, сообщение</span><code>molecules.css</code></a>
+        <a href="#organisms"><b>Организмы</b><span>Карточка анкеты, меню, шторка, переписка</span><code>organisms.css</code></a>
+        <a href="#templates"><b>Шаблоны</b><span>Раскладка экранов приложения</span><code>miniapp/css/app.css</code></a>
+      </div>
+    </header>
+
+    <div id="content"></div>
+  </main>
+</div>
+
+<script src="../miniapp/js/icons.js"></script>
+<script>
+(function () {
+  const I = window.I;
+  const heart = I.heartFill, x = I.x;
+  const ph = (a, b, cls = "photo") => `<div class="${cls}" style="--p1:${a};--p2:${b};background:linear-gradient(160deg,${a},${b})"></div>`;
+  const cssVar = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+  /* Каждый раздел: название, что это и где используется, из какого файла/класса, живой пример */
+  const LAYERS = [
+    { id: "base", title: "Основа", lead: "Сырые решения, из которых сделано всё остальное. Ни одного цвета или размера «на глаз» — только отсюда.", items: [
+      { t: "Цвета", about: "Сирень — фон, аметист — действие, пион — только симпатия и совпадение. Зелёный — защищено, янтарный — внимание, красный — опасность.", code: "tokens.css", stage: "ds-stage--bg", html: () => [
+        ["Фон", "--bg"], ["Поверхность", "--surface"], ["Текст", "--text"], ["Приглушённый", "--text-muted"], ["Действие", "--accent"], ["Симпатия", "--like"],
+        ["Защищено", "--safe"], ["Внимание", "--warn"], ["Опасно", "--danger"],
+      ].map(([n, v]) => `<div class="swatch"><i style="background:var(${v})"></i><div>${n}<code>${cssVar(v)}</code></div></div>`).join("")
+        + `<div class="swatch"><i style="background:var(--accent-grad)"></i><div>Градиент действия<code>accent-grad</code></div></div><div class="swatch"><i style="background:var(--like-grad)"></i><div>Градиент симпатии<code>like-grad</code></div></div>` },
+      { t: "Шрифты", about: "Montserrat — заголовки: обычная толщина, а главное слово — самым жирным с градиентом. Onest — весь остальной текст, сделан под кириллицу.", code: "--font-display · --font-body", stage: "ds-stage--col", html: () => `
+        <div class="type-row"><span>Герой · 44</span><span class="t-hero"><em>Взаимно!</em></span></div>
+        <div class="type-row"><span>Заголовок · 28</span><span class="t-d1">Знакомства, где <em>всё взаимно</em></span></div>
+        <div class="type-row"><span>Имя на карточке · 22</span><span class="t-d2">Малика 26</span></div>
+        <div class="type-row"><span>Блок · 18</span><span class="t-h">Перед первой встречей</span></div>
+        <div class="type-row"><span>Текст · 16</span><span>Если симпатия совпала — откроется чат прямо здесь, в Telegram.</span></div>
+        <div class="type-row"><span>Подпись · 14</span><span class="t-sm t-muted">Вас не будет в ленте. Пары и чаты сохранятся.</span></div>
+        <div class="type-row"><span>Метка · 12</span><span class="t-label">Никогда не видно другим</span></div>` },
+      { t: "Отступы", about: "Шаг 4 пикселя. Поле по краям экрана — 16.", code: "--sp-1 … --sp-10", html: () => [4, 8, 12, 16, 20, 24, 32, 40].map((n) => `<div class="space"><i style="width:${n}px;height:${n}px"></i>${n}</div>`).join("") },
+      { t: "Скругления", about: "Чем крупнее блок — тем мягче угол. Кнопки и метки — «таблетки».", code: "--r-sm … --r-pill", html: () => [["12", "--r-sm"], ["18", "--r-md"], ["26", "--r-lg"], ["34", "--r-card"], ["∞", "--r-pill"]].map(([n, v]) => `<div class="radius" style="border-radius:var(${v})">${n}</div>`).join("") },
+      { t: "Тени", about: "В светлой теме — мягкое сиреневое свечение. В тёмной — глубокая тень и тонкая светлая кромка, чтобы блоки отделялись от фона.", code: "--shadow-soft · --shadow-float · --shadow-card", stage: "ds-stage--bg", html: () => [["Мягкая", "--shadow-soft"], ["Парящая", "--shadow-float"], ["Карточка", "--shadow-card"]].map(([n, v]) => `<div class="shadow" style="box-shadow:var(${v})">${n}</div>`).join("") },
+      { t: "Движение", about: "Коротко и по делу: 120 мс — отклик, 220 — смена состояния, 420 — появление. Пружина — для живых моментов. Если в телефоне включено «уменьшить движение» — анимации выключаются.", code: "motion.css", html: () => `<button class="btn btn--primary">Нажмите — блик</button><button class="action action--like" aria-label="Нравится">${heart}</button>` },
+    ]},
+
+    { id: "atoms", title: "Атомы", lead: "Неделимые элементы. Не знают, где стоят, — только как выглядят и как откликаются на нажатие.", items: [
+      { t: "Кнопка", about: "Главная — фиолетовая. Розовая — только действия симпатии. Вторичная, текстовая и опасная — для остального.", code: ".btn", html: () => `
+        <button class="btn btn--primary">Создать анкету</button><button class="btn btn--like">Написать</button><button class="btn btn--secondary">Изменить фильтры</button>
+        <button class="btn btn--ghost">Всё равно отправить</button><button class="btn btn--danger">Отправить жалобу</button><button class="btn btn--primary" disabled>Недоступно</button>
+        <button class="btn btn--primary btn--go" style="width:280px"><span>Создать анкету</span><span class="btn__arrow">${I.right}</span></button>` },
+      { t: "Круглая кнопка", about: "Действия ленты — «Нравится» крупнее всех. Маленькая круглая — для шапок и фильтров.", code: ".action · .icon-btn", html: () => `
+        <button class="action action--sm" aria-label="Вернуть">${I.undo}</button><button class="action action--pass" aria-label="Дальше">${x}</button>
+        <button class="action action--like" aria-label="Нравится">${heart}</button><button class="action action--sm action--super" aria-label="С сообщением">${I.chatHeart}</button>
+        <button class="icon-btn" aria-label="Ещё">${I.more}</button><button class="icon-btn icon-btn--ring" aria-label="Фильтры">${I.sliders}</button>` },
+      { t: "Метка", about: "Интересы, быстрый выбор, фильтры. Выбранная — с градиентом. Общая с собеседником — розовая.", code: ".chip", html: () => `
+        <button class="chip" aria-pressed="true">Кино</button><button class="chip" aria-pressed="false">Кофе</button><span class="chip chip--static">${I.target}Создать семью</span><span class="chip chip--static chip--shared">Общий интерес</span>` },
+      { t: "Значок и счётчик", about: "Короткий статус рядом с именем или поверх фото. Счётчик — новые события в меню.", code: ".badge · .counter", stage: "ds-stage--photo", html: () => `
+        <span class="badge badge--verified">${I.verified}Проверена</span><span class="badge badge--accent">Plus</span><span class="badge badge--like">Чаще выбирают</span><span class="badge badge--glass">${I.briefcase}Рядом с работой</span><span class="counter">3</span>` },
+      { t: "Поле ввода", about: "Имя, ответы на вопросы. В фокусе — фиолетовая обводка с мягким ореолом.", code: ".input · .textarea", stage: "ds-stage--col", html: () => `<input class="input" placeholder="Например, Азиз"><textarea class="textarea" placeholder="Коротко и по-честному"></textarea>` },
+      { t: "Выключатель и ползунок", about: "Настройки приватности и уведомлений, возраст в фильтрах.", code: ".switch · .range", html: () => `<label class="switch"><input type="checkbox" checked><span class="switch__track"></span></label><label class="switch"><input type="checkbox"><span class="switch__track"></span></label><input class="range" type="range" style="width:220px">` },
+      { t: "Фото и аватар", about: "Аватар в списках, зелёная точка — в сети. Фото, скрытые до взаимной симпатии, размыты.", code: ".avatar · .photo--blur", html: () => `
+        <div class="avatar avatar--sm">${ph("#8b45e8", "#f0508c")}</div><div class="avatar">${ph("#2b6f8f", "#9fd8c6")}<span class="avatar__online"></span></div><div class="avatar avatar--lg">${ph("#b0513a", "#f5c56b")}</div>
+        <div class="avatar avatar--lg">${ph("#5a3fb0", "#f08bc5", "photo photo--blur")}</div>` },
+      { t: "Знак и прогресс", about: "Сердце из двух линий — фиолетовой и розовой, два человека. Внизу они перекрещиваются, как завязанная лента. Полоса — шаги анкеты.", code: ".logo · .progress", html: () => `<span class="logo">${I.lens()}Взаимно</span><div class="progress" style="width:220px"><span style="width:40%"></span></div>` },
+    ]},
+
+    { id: "molecules", title: "Молекулы", lead: "Несколько атомов, собранных в узел с одной задачей.", items: [
+      { t: "Поле с подписью", about: "Подпись, поле и подсказка под ним.", code: ".field", stage: "ds-stage--col", html: () => `<div class="field"><span class="field__label">Имя</span><input class="input" value="Азиз"><span class="field__hint">Другие увидят только имя и возраст.</span></div>` },
+      { t: "Поле даты", about: "Вместо системного календаря: дата словами и сразу возраст. По нажатию открываются «барабаны».", code: ".date-field", stage: "ds-stage--col", html: () => `<button class="input date-field"><span class="date-field__value">12 марта 1996</span><span class="date-field__age">30 лет</span>${I.calendar}</button>` },
+      { t: "Выбор пола", about: "Две крупные плитки со знаком. Выбранная заливается цветом. После «Мужчина» приложение уходит в тёмную тему — попробуйте.", code: ".gender-pick", stage: "ds-stage--col", html: () => `<div class="gender-pick" id="ds-gender" role="radiogroup">
+        <button type="button" class="gender-pick__opt gender-pick__opt--f" role="radio" aria-checked="true" data-val="f"><span class="gender-pick__icon">${I.female}</span>Женщина</button>
+        <button type="button" class="gender-pick__opt gender-pick__opt--m" role="radio" aria-checked="false" data-val="m"><span class="gender-pick__icon">${I.male}</span>Мужчина</button></div>` },
+      { t: "Переключатель-таблетка", about: "Выбор одного из 2–3 вариантов. Подсветка переезжает к выбранному.", code: ".segmented", stage: "ds-stage--col", html: () => `<div class="segmented"><button aria-pressed="true">Подборка дня · 5</button><button aria-pressed="false">Все анкеты</button></div>` },
+      { t: "Вариант выбора", about: "Крупный пункт с пояснением — например, цель знакомства.", code: ".option", stage: "ds-stage--col", html: () => `<div class="options"><button class="option" aria-checked="true"><span><b>Создать семью</b><span class="t-sm t-muted" style="display:block">Ищу мужа или жену</span></span><span class="option__dot"></span></button><button class="option" aria-checked="false"><span><b>Серьёзные отношения</b><span class="t-sm t-muted" style="display:block">Ищу партнёра надолго</span></span><span class="option__dot"></span></button></div>` },
+      { t: "Строка настройки", about: "Значок, название, пояснение и стрелка или выключатель.", code: ".row", stage: "ds-stage--col", html: () => `<div class="group">
+        <a class="row" href="#molecules-5"><span class="row__icon">${I.lock}</span><span class="row__body"><span class="row__title">Приватность и данные</span><span class="row__sub" style="display:block">Видимость, согласия, удаление</span></span><span class="row__chev">${I.right}</span></a>
+        <label class="row"><span class="row__icon">${I.eyeOff}</span><span class="row__body"><span class="row__title">Фото только после взаимной симпатии</span></span><span class="switch"><input type="checkbox" checked><span class="switch__track"></span></span></label></div>` },
+      { t: "Плашка", about: "Короткое пояснение, цвет по смыслу: защищено, внимание, справка, опасно.", code: ".notice", stage: "ds-stage--col", html: () => `
+        <div class="notice notice--safe">${I.lock}<span>Переписка идёт внутри «Взаимно». Собеседник не видит ваш Telegram.</span></div>
+        <div class="notice notice--warn">${I.alert}<span><b>Похоже на мошенничество.</b> Не переходите по ссылке и не переводите деньги.</span></div>
+        <div class="notice notice--accent">${I.info}<span>Анкета ещё не прошла проверку селфи.</span></div>
+        <div class="notice notice--danger">${I.trash}<span>Анкета исчезнет у всех сразу.</span></div>` },
+      { t: "Сообщение", about: "Свои — справа с градиентом, чужие — слева.", code: ".msg · .bubble", stage: "ds-stage--bg ds-stage--col", html: () => `<div class="msg msg--them"><div class="bubble">Привет! Какой плов твой любимый?</div><span class="msg__time">19:02</span></div><div class="msg msg--me"><div class="bubble">Конечно, ташкентский 🙂</div><span class="msg__time">19:05</span></div>` },
+      { t: "«Почему подходит»", about: "Объяснение на карточке, почему человек в подборке дня.", code: ".card__why", stage: "ds-stage--photo", html: () => `<div class="card__why">${I.sparkle}<span>Подходит: та же цель, общих интересов: 3, работает рядом</span></div>` },
+      { t: "Пара и тариф", about: "Кружок новой пары с цветным кольцом; карточка срока подписки Plus.", code: ".pair · .plan", html: () => `<button class="pair"><span class="pair__ring"><div class="avatar">${ph("#256b52", "#c7e37a")}</div></span><span class="t-xs">Лола</span></button>
+        <div class="plans" style="width:340px;max-width:100%"><button class="plan" aria-checked="false"><span class="t-sm">Неделя</span><b class="plan__price">250 ⭐</b></button><button class="plan" aria-checked="true"><span class="badge badge--like plan__tag">Чаще</span><span class="t-sm">Месяц</span><b class="plan__price">590 ⭐</b></button><button class="plan" aria-checked="false"><span class="t-sm">3 месяца</span><b class="plan__price">1290 ⭐</b></button></div>` },
+    ]},
+
+    { id: "organisms", title: "Организмы", lead: "Самостоятельные блоки интерфейса. Из них собираются экраны.", items: [
+      { t: "Карточка анкеты", about: "Фото почти на весь экран, на нём — только имя, возраст, расстояние, цель и одна строка «почему подходит». Шапки над лентой нет — фото от самого верха. Кнопки сидят в вырезах карточки: справа сверху — фильтры, симпатия с сообщением, анкета целиком; снизу только решение — «дальше» и «нравится», наполовину ниже края. На сердце — сколько симпатий осталось на сегодня. «Вернуть» появляется в сообщении сразу после «дальше».", code: ".card · .deck · .deck-notch", stage: "ds-stage--bg", html: () => `<div class="ds-phone feed"><div class="deck ds-deck">
+        ${`<article class="card card--next" aria-hidden="true">${ph("#256b52", "#c7e37a")}</article>`}
+        <article class="card">${ph("#8b45e8", "#f0508c")}<div class="card__bars"><span class="is-on"></span><span></span></div>
+          <div class="card__top"><span class="badge badge--glass badge--picks">${I.sparkle}Подборка дня · 5</span><span class="badge badge--glass">${I.briefcase}Рядом с работой</span><span class="badge badge--glass"><i class="dot"></i>В сети</span></div>
+          <div class="card__info"><div class="card__name"><h2 class="t-d2">Малика</h2><span class="t-d2" style="font-weight:400;opacity:.85">26</span><span class="card__check">${I.verified}</span></div>
+          <div class="card__meta"><span>${I.pin}≈ 2 км</span><span>${I.target}Создать семью</span></div><div class="card__why">${I.sparkle}<span>та же цель · общих интересов: 3</span></div></div></article>
+        <div class="deck-notch deck-notch--side"><button class="action action--sm" aria-label="Фильтры">${I.sliders}</button><button class="action action--sm action--super" aria-label="С сообщением">${I.chatHeart}</button><button class="action action--sm" aria-label="Открыть анкету">${I.idCard}</button></div>
+        <div class="deck-notch deck-notch--bottom"><button class="action action--pass" aria-label="Дальше">${x}</button><button class="action action--like" aria-label="Нравится">${heart}<span class="action__count">25</span></button></div></div></div>` },
+      { t: "Нижнее меню", about: "Плавает над экраном; активный раздел поднят в круге.", code: ".tabbar", stage: "ds-stage--bg ds-static", html: () => `<div class="ds-phone" style="padding-top:34px"><nav class="tabbar"><a href="#organisms-1">${I.cards}<span>Лента</span></a><a href="#organisms-1" aria-current="page">${I.heart}<span>Симпатии</span><span class="counter">3</span></a><a href="#organisms-1">${I.chat}<span>Чаты</span></a><a href="#organisms-1">${I.user}<span>Профиль</span></a></nav></div>` },
+      { t: "Карточка «Симпатий»", about: "Кто отметил: почему подходит, что написал, «Нет» и «Взаимно».", code: ".inbox-card", stage: "ds-stage--bg", html: () => `<div class="ds-phone"><article class="inbox-card"><a class="inbox-card__main" href="#organisms-2"><div class="avatar avatar--lg">${ph("#3d2e5c", "#7fb5ff")}</div><span class="inbox-card__who"><b class="t-h">Жасур, 29</b><span class="badge badge--verified">${I.verified}Проверен</span><span class="t-xs t-muted">Создать семью · общих интересов: 2</span></span></a>
+        <blockquote class="inbox-card__note"><span class="t-label">Написал вам</span>Тоже люблю Анхор по вечерам. Какой плов лучший?</blockquote>
+        <div class="inbox-card__actions"><button class="btn btn--secondary">${x}Нет</button><button class="btn btn--like">${heart}Взаимно</button></div></article></div>` },
+      { t: "Карточка встречи", about: "Приглашение: день, время, людное место. Главный ответ — первым и во всю ширину.", code: ".bubble--meet", stage: "ds-stage--bg", html: () => `<div class="ds-phone"><div class="msg msg--them"><div class="bubble bubble--meet"><span class="bubble--meet__head">${I.calendar}Предлагает встречу</span><b>В выходные · вечер, 20:30</b><span>${I.pin}Tashkent City Park</span>
+        <button class="btn btn--sm btn--primary bubble__main">Согласиться</button><span class="bubble__btns"><button class="btn btn--sm btn--secondary">Другое время</button><button class="btn btn--sm btn--secondary">Пока рано</button></span></div></div></div>` },
+      { t: "Поле ввода в переписке", about: "«+» — всё, что можно сделать в переписке (встреча, обмен Telegram, анкета, жалоба), поле сообщения и отправка. Когда писать пока нельзя — замок и объяснение почему, а «+» остаётся.", code: ".composer", stage: "ds-stage--bg ds-static ds-stage--col", html: () => `<form class="composer" onsubmit="return false"><button type="button" class="icon-btn composer__more" aria-label="Действия">${I.plus}</button><input class="input" placeholder="Сообщение"><button class="action action--sm composer__send" aria-label="Отправить">${I.send}</button></form>
+        <div class="composer composer--locked"><button type="button" class="icon-btn composer__more" aria-label="Действия">${I.plus}</button>${I.lock}<span class="t-xs">Вы написали первым — следующее сообщение после ответа.</span></div>` },
+      { t: "Шторка с выбором даты", about: "Всплывает снизу. Внутри — «барабаны» дня, месяца и года.", code: ".sheet · .wheels", stage: "ds-stage--bg ds-static", html: () => `<div class="ds-phone"><div class="sheet"><h2 class="t-h">Дата рождения</h2><p class="t-sm bp-age">Вам <b>30 лет</b></p>
+        <div class="wheels"><div class="wheels__band" aria-hidden="true"></div>${[["10", "11", "12", "13", "14"], ["Январь", "Февраль", "Март", "Апрель", "Май"], ["1994", "1995", "1996", "1997", "1998"]].map((col) => `<div class="wheel ds-wheel">${col.map((v, i) => `<div class="wheel__item ${i === 2 ? "is-on" : ""}">${v}</div>`).join("")}</div>`).join("")}</div>
+        <button class="btn btn--primary btn--block" style="margin-top:16px">Готово</button></div></div>` },
+      { t: "Экран «Взаимно»", about: "Главный момент: два фото с наклоном и сердце между ними.", code: ".match", stage: "ds-stage--bg ds-static", html: () => `<div class="ds-phone"><div class="match"><div class="match__pair"><div class="match__ph match__ph--a">${ph("#3d2e5c", "#7fb5ff")}</div><div class="match__ph match__ph--b">${ph("#8b45e8", "#f0508c")}</div><span class="match__heart">${heart}</span></div>
+        <p class="t-hero match__word"><em>Взаимно!</em></p><p class="match__sub">Малика тоже отметила вашу анкету. Чат уже открыт.</p><div class="match__btns"><button class="btn btn--like btn--block">Написать</button><button class="btn btn--block match__later">Смотреть дальше</button></div></div></div>` },
+    ]},
+  ];
+
+  const TEMPLATES = [
+    ["#/welcome", "Первый экран", "Обещания и согласия"], ["#/setup/1", "Анкета · 5 шагов", "Имя, дата, пол → цель → фото → о себе → где искать"],
+    ["#/feed", "Лента", "Подборка дня, карточка, кнопки"], ["#/likes", "Симпатии", "Кто отметил: «Взаимно» или «Нет»"], ["#/chats", "Чаты", "Новые пары и переписки"],
+    ["#/chat/c1", "Переписка", "Сообщения, встреча, обмен Telegram"], ["#/me", "Профиль", "Фото, о себе, настройки"], ["#/privacy", "Приватность", "Видимость, данные, удаление"],
+    ["#/safety", "Безопасность", "Советы, 102 и 103, жалобы"], ["#/notifications", "Уведомления", "Что и когда присылает бот"], ["#/premium", "Plus", "Тарифы за звёзды"], ["#/verify", "Проверка селфи", "Жест и селфи"],
+  ];
+
+  function draw() {
+    document.getElementById("content").innerHTML = LAYERS.map((L) => `
+      <section class="ds-layer" id="${L.id}">
+        <div class="ds-layer__head"><h2><em>${L.title}</em></h2></div>
+        <p class="ds-layer__lead">${L.lead}</p>
+        ${L.items.map((it, i) => `
+          <div class="ds-item" id="${L.id}-${i}">
+            <div class="ds-item__about"><h3>${it.t}</h3><p>${it.about}</p><code>${it.code}</code></div>
+            <div class="ds-stage ${it.stage || ""}">${it.html()}</div>
+          </div>`).join("")}
+      </section>`).join("") + `
+      <section class="ds-layer" id="templates">
+        <div class="ds-layer__head"><h2><em>Шаблоны</em></h2></div>
+        <p class="ds-layer__lead">Как организмы расставлены на экранах мини-приложения. Нажмите — экран откроется в прототипе.</p>
+        <div class="ds-templates">${TEMPLATES.map(([h, t, s]) => `<a href="../miniapp/index.html?demo=1${h}" target="_blank" rel="noopener"><b>${t}</b><span>${s}</span></a>`).join("")}</div>
+      </section>`;
+    // барабаны: средний пункт — под полосой выбора
+    document.querySelectorAll(".ds-wheel").forEach((w) => { w.scrollTop = 2 * 44; });
+    document.getElementById("ds-gender").onclick = (e) => {
+      const b = e.target.closest("button"); if (!b) return;
+      setTheme(b.dataset.val === "m" ? "dark" : "light");
+    };
+  }
+
+  function setTheme(tm) {
+    const go = () => {
+      document.documentElement.dataset.theme = tm;
+      document.querySelectorAll("#theme button").forEach((x) => x.setAttribute("aria-pressed", x.dataset.t === tm));
+      const y = window.scrollY; draw(); window.scrollTo(0, y);   // коды цветов пересчитываются под тему
+      const g = document.querySelector(`#ds-gender [data-val="${tm === "dark" ? "m" : "f"}"]`);
+      document.querySelectorAll("#ds-gender button").forEach((x) => x.setAttribute("aria-checked", x === g));
+    };
+    if (document.startViewTransition && !matchMedia("(prefers-reduced-motion: reduce)").matches) document.startViewTransition(go); else go();
+  }
+
+  document.getElementById("toc").innerHTML = LAYERS.map((L) => `<div><h2>${L.title}</h2>${L.items.map((it, i) => `<a href="#${L.id}-${i}">${it.t}</a>`).join("")}</div>`).join("")
+    + `<div><h2>Шаблоны</h2><a href="#templates">Экраны приложения</a></div>`;
+  document.getElementById("theme").onclick = (e) => { const b = e.target.closest("button"); if (b) setTheme(b.dataset.t); };
+  draw();
+})();
+</script>
+</body>
+</html>
