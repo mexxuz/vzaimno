@@ -672,3 +672,56 @@
 .bubble--meet .bubble__btns .btn { flex: 1; }
 
 .chat__safe > span { display: block; }
+
+/* ---------- Кадрирование фотографии ---------- */
+body.is-locked { overflow: hidden; }   /* пока открыт кадр, страница под ним не прокручивается */
+
+.cropper {
+  position: fixed; inset: 0; z-index: 90;
+  display: flex; flex-direction: column;
+  background: var(--bg); background-attachment: fixed;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.cropper__bar {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3);
+  padding: calc(env(safe-area-inset-top) + var(--sp-3)) var(--sp-4) var(--sp-3);
+}
+
+.cropper__title { color: var(--text-muted); }
+
+.cropper__stage { flex: 1; display: grid; place-items: center; padding: 0 var(--sp-4); min-height: 0; }
+
+.cropper__frame {
+  position: relative; width: min(84vw, 340px); aspect-ratio: 4 / 5;
+  max-height: 100%; overflow: hidden;
+  border-radius: var(--r-card); background: #000;
+  touch-action: none; cursor: grab; user-select: none;
+}
+
+.cropper__frame:active { cursor: grabbing; }
+
+.cropper__frame img {
+  position: absolute; left: 50%; top: 50%;
+  max-width: none; max-height: none;      /* размер задаёт сам кадратор, не общее правило для картинок */
+  transform-origin: center; -webkit-user-drag: none; pointer-events: none;
+}
+
+/* Затемнённые края — то, что карточка в ленте обрежет по бокам */
+.cropper__feed { position: absolute; inset: 0; pointer-events: none; }
+
+.cropper__feed::before, .cropper__feed::after {
+  content: ""; position: absolute; top: 0; bottom: 0; width: calc((100% - var(--feed)) / 2);
+  background: rgba(0, 0, 0, .5);
+}
+
+.cropper__feed::before { left: 0; border-right: 1px dashed rgba(255, 255, 255, .5); }
+.cropper__feed::after { right: 0; border-left: 1px dashed rgba(255, 255, 255, .5); }
+
+.cropper__feed span { position: absolute; left: 50%; top: 10px; transform: translateX(-50%); white-space: nowrap; }
+
+.cropper__tools { display: grid; gap: var(--sp-2); padding: var(--sp-4) var(--sp-5) var(--sp-5); justify-items: center; }
+
+.cropper__zoom { width: min(84vw, 340px); }
+
+.cropper__hint { max-width: 420px; text-align: center; }

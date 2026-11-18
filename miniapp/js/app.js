@@ -379,15 +379,30 @@
           s.gender = b.dataset.val;
           // Смена темы — плавным перетеканием, а не миганием
           const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
-          if (document.startViewTransition && !calm) document.startViewTransition(render); else render();
+          // Перерисовка с плавным переходом. Если предыдущий переход ещё идёт,
+          // браузер отменяет новый — это нормально, гасим отказ, чтобы он не всплывал.
+          if (document.startViewTransition && !calm) document.startViewTransition(render).finished.catch(() => {});
+          else render();
         };
         if (n === 4) {
           document.getElementById("f-prompt").onchange = (e) => { s.prompt = e.target.value; };
           document.getElementById("f-answer").oninput = (e) => { s.answer = e.target.value; };
         }
         const pi = document.getElementById("photo-input");
-        if (pi) pi.onchange = () => {
-          for (const f of pi.files) if (s.files.length < 6) { s.files.push(f); s.previews.push(URL.createObjectURL(f)); }
+        if (pi) pi.onchange = async () => {
+          // Каждый снимок сначала кадрируем: человек сам решает, что попадёт в карточку
+          for (const f of [...pi.files]) {
+            if (s.files.length >= 6) break;
+            const cut = await Crop.open(f, {
+              title: t("crop_title"), feed: t("crop_feed"), hint: t("crop_hint"),
+              zoom: t("crop_zoom"), cancel: t("cancel"), done: t("done"),
+            });
+            if (cut === "small") { toast(t("photo_small")); continue; }
+            if (cut === "bad") { toast(t("photo_bad")); continue; }
+            if (!cut) continue;                       // передумал
+            s.files.push(cut); s.previews.push(URL.createObjectURL(cut));
+          }
+          pi.value = "";                              // тот же файл можно выбрать снова
           render();
         };
         if (n === 5) document.getElementById("f-work").onchange = (e) => { s.work = e.target.value; };

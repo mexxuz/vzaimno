@@ -62,7 +62,7 @@
     hasAuth: () => !!auth(),
     ready: () => ready,
     // Полный адрес для ссылок, которые сервер отдаёт относительными (фото)
-    url: (p) => (/^https?:/.test(p) ? p : base + p),
+    url: (p) => (/^(https?:|blob:|data:)/.test(p) ? p : base + p),   // blob: — только что выбранное фото, его дополнять адресом сервера не нужно
     get: (p) => call("GET", p),
     post: (p, b) => call("POST", p, b === undefined ? {} : b),
     patch: (p, b) => call("PATCH", p, b),
